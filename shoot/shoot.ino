@@ -19,17 +19,8 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  shoot(3000);
-}
-
-void shoot(int ms) 
-{
   digitalWrite(M1, HIGH);
   digitalWrite(M2, HIGH);
-  analogWrite(E1, 255);   //PWM Speed Control
-  analogWrite(E2, 255);   //PWM Speed Control
-  delay(ms);
-  digitalWrite(M1, LOW);
-  digitalWrite(M2, LOW);
+  analogWrite(E1, 80); // PWM Speed Control
+  analogWrite(E2, 80); // PWM Speed Control
 }

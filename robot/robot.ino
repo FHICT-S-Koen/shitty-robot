@@ -7,6 +7,12 @@
 //and the MP3 Shield Library
 #include <SFEMP3Shield.h>
 
+const int buttonPin = A2;
+int buttonState;            // the current reading from the input pin
+int lastButtonState = LOW;  // Previous state of the button
+unsigned long lastDebounceTime = 0;  // Time of the last button state change
+unsigned long debounceDelay = 30;  // Debounce time in milliseconds
+
 /**
  * \brief Object instancing the SdFat library.
  *
@@ -32,13 +38,13 @@ int E1 = 5;
 int M1 = 4;
 int E2 = 6;
 int M2 = 7;
-int buttonPin = 2;
 
 void setup()
 {
   Serial.begin(115200);
   // initialize the pushbutton pin as an input:
   pinMode(buttonPin, INPUT_PULLUP);
+
   pinMode(M1, OUTPUT);
   pinMode(M2, OUTPUT);
 
@@ -68,16 +74,27 @@ void loop()
   if (!started) {
     // Zijn jullie ready?
     playTrack(1);
-    delay(1000);
 
     while(!started) {
-      int currentState = digitalRead(buttonPin);
-      Serial.print(F("Starting: "));
-      Serial.println(currentState);
-      if (currentState == HIGH) {
-        started = true;
-        break;
+      int reading = analogRead(buttonPin);
+
+      if (reading != lastButtonState) {
+        lastDebounceTime = millis();  // Reset debounce timer
       }
+
+      if ((millis() - lastDebounceTime) > debounceDelay) {
+
+        if (reading != buttonState) {
+          buttonState = reading;
+
+          if (buttonState > 0) {
+            started = true;
+            break;
+          }
+        }
+      }
+      lastButtonState = reading;
+      return;
     }
   }
 	Serial.println(F("STARTED"));
@@ -142,3 +159,10 @@ void playTrack(uint8_t track)
     Serial.println(track);
   }
 }
+
+
+// bool pollButton() {
+//   Serial.println(F("test"));
+  
+// }
+
