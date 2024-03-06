@@ -62,7 +62,7 @@ void setup()
 
 void loop()
 {
-  bool started = true;
+  bool started = false;
 
   // Start game
   if (!started) {
@@ -79,8 +79,8 @@ void loop()
         break;
       }
     }
-    return;
   }
+	Serial.println(F("STARTED"));
 
   // Het spel gaat starten!! 3,2,1 GO! 
   playTrack(2);
@@ -105,7 +105,6 @@ void loop()
     playTrack(random(3, 6));
     delay(1000);
   }
-  // start = false;
 
   delay(1000);
   // Eind spel 
