@@ -122,8 +122,9 @@ void shoot(int ms)
 {
   digitalWrite(M1, HIGH);
   digitalWrite(M2, HIGH);
-  analogWrite(E1, 255);   //PWM Speed Control
-  analogWrite(E2, 255);   //PWM Speed Control
+  //PWM Speed Control
+  analogWrite(E1, 255);
+  analogWrite(E2, 255);
   delay(ms);
   digitalWrite(M1, LOW);
   digitalWrite(M2, LOW);
@@ -142,47 +143,3 @@ void playTrack(uint8_t track)
     Serial.println(track);
   }
 }
-
-#include <Stepper.h>
-
-const int STEPS = 200;
-
-// create an instance of the stepper class, specifying
-
-// the number of steps of the motor and the pins it's
-
-// attached to
-
-Stepper stepper(STEPS, 5, 4);
-
-void setup() {
-  // set the speed at 60 rpm:
-
-  stepper.setSpeed(60);
-
-  // initialize the serial port:
-
-  Serial.begin(9600);
-}
-
-
-void loop() {
- // step one revolution  in one direction:
-
-  Serial.println("clockwise");
-
-  stepper.step(STEPS);
-
-  delay(500);
-
-
-  // step one revolution in the other direction:
-
-  // Serial.println("counterclockwise");
-
-  // stepper.step(-STEPS);
-
-  delay(500);
-}
-
-
