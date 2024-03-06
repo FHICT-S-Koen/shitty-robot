@@ -38,7 +38,7 @@ void setup()
 {
   Serial.begin(115200);
   // initialize the pushbutton pin as an input:
-  // pinMode(buttonPin, INPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
   pinMode(M1, OUTPUT);
   pinMode(M2, OUTPUT);
 
@@ -62,63 +62,60 @@ void setup()
 
 void loop()
 {
-  bool start = true;
+  bool started = true;
 
   // Start game
-  if (!start) {
+  if (!started) {
     // Zijn jullie ready?
     playTrack(1);
-    delay(10000);
+    delay(1000);
+
+    while(!started) {
+      int currentState = digitalRead(buttonPin);
+      Serial.print(F("Starting: "));
+      Serial.println(currentState);
+      if (currentState == HIGH) {
+        started = true;
+        break;
+      }
+    }
     return;
   }
 
   // Het spel gaat starten!! 3,2,1 GO! 
-  // playTrack(9);
+  playTrack(2);
 
-  // Go Go Go! 
-  // Sneller! 
-  // Kan je ze allemaal vinden?
+  shoot(10000);
 
-  time
-  while() 
-  playTrack(random(3, 6));
-
-  // delay(1000);
-
+  bool stop = true;
+  
   // Tijdens het spel 
+  while(stop) {
+    // int currentState = digitalRead(buttonPin);
+    // if (currentState == HIGH) {
+    //   stop = true;
+    //   break;
+    // }
+    // Go Go Go! 
+    // Sneller! 
+    // Kan je ze allemaal vinden?
+    playTrack(9);
+    delay(10000);
+    MP3player.stopTrack();
+    playTrack(random(3, 6));
+    delay(1000);
+  }
+  // start = false;
 
-
-
-
-
-
+  delay(1000);
   // Eind spel 
 
-  // Alle balletjes zijn geschoten! 
+  // SCRAP - Alle balletjes zijn geschoten! 
+
   // Hebben jullie alles gevonden? 
+  playTrack(7);
   // Hervul me om een nieuw spel te starten. 
-
-  shoot(5000);
-  // digitalWrite(M1,HIGH);
-  // digitalWrite(M2, HIGH);
-  // analogWrite(E1, 255);   //PWM Speed Control
-  // analogWrite(E2, 255);   //PWM Speed Control
-
-  // buttonState = digitalRead(buttonPin);
-
-  // if (buttonState == HIGH) {
-  //   shoot()
-  // }
-
-  // int value;
-  // for(value = 0 ; value <= 255; value+=5)
-  // {
-  //   digitalWrite(M1,HIGH);
-  //   digitalWrite(M2, HIGH);
-  //   analogWrite(E1, value);   //PWM Speed Control
-  //   analogWrite(E2, value);   //PWM Speed Control
-  //   delay(30);
-  // }
+  playTrack(8);
 }
 
 void shoot(int ms) 
@@ -143,152 +140,49 @@ void playTrack(uint8_t track)
   } else {
     Serial.print(F("Playing: "));
     Serial.println(track);
-
-
-    // MP3player.stopTrack();
-
-
-    // //we can get track info by using the following functions and arguments
-    // //the functions will extract the requested information, and put it in the array we pass in
-    // MP3player.trackArtist((char*)&artist);
-    // MP3player.trackAlbum((char*)&album);
-
-    // //print out the arrays of track information
-    // Serial.write((byte*)&title, 30);
-    // Serial.println();
-    // Serial.print(F("by:  "));
-    // Serial.write((byte*)&artist, 30);
-    // Serial.println();
-    // Serial.print(F("Album:  "));
-    // Serial.write((byte*)&album, 30);
-    // Serial.println();
   }
 }
 
-// /**set control port**/
-// // const int E1Pin = 10;
-// // const int M1Pin = 12;
-// // const int E2Pin = 11;
-// // const int M2Pin = 13;
+#include <Stepper.h>
 
-// const int E1Pin = 5;
-// const int M1Pin = 4;
-// const int E2Pin = 6;
-// const int M2Pin = 7;
+const int STEPS = 200;
 
-// /**inner definition**/
-// typedef struct {
-//   byte enPin;
-//   byte directionPin;
-// } MotorContrl;
+// create an instance of the stepper class, specifying
 
-// const int M1 = 0;
-// const int M2 = 1;
-// const int MotorNum = 2;
+// the number of steps of the motor and the pins it's
 
-// const MotorContrl MotorPin[] = { {E1Pin, M1Pin}, {E2Pin, M2Pin} } ;
+// attached to
 
-// const int Forward = LOW;
-// const int Backward = HIGH;
+Stepper stepper(STEPS, 5, 4);
 
-// /**program**/
-// void setup() {
-//   initMotor();
-// }
+void setup() {
+  // set the speed at 60 rpm:
 
-// void loop() {
-//   int value;
-//   /**test M1 **/
-//   setMotorDirection( M1, Forward );
-//   setMotorSpeed( M1, 100 );
-//   delay(1000);
-//   setMotorSpeed( M1, 0 );
-//   delay(100);
+  stepper.setSpeed(60);
 
-//   setMotorDirection( M1, Backward );
-//   setMotorSpeed( M1, 50 );
-//   delay(1000);
-//   setMotorSpeed( M1, 0 );
-//   delay(100);
+  // initialize the serial port:
 
-//   /**test M2**/
-//   setMotorDirection( M2, Backward );
-//   for (value = 0 ; value <= 100; value += 5) {
-//     setMotorSpeed( M2, value );
-//     delay(100);
-//   }
-//   setMotorSpeed( M2, 0 );
-//   setMotorDirection( M2, Forward );
-//   for (value = 0 ; value <= 100; value += 5) {
-//     setMotorSpeed( M2, value );
-//     delay(100);
-//   }
-//   setMotorSpeed( M2, 0 );
-// }
-
-// /**functions**/
-// void initMotor( ) {
-//   int i;
-//   for ( i = 0; i < MotorNum; i++ ) {
-//     digitalWrite(MotorPin[i].enPin, LOW);
-
-//     pinMode(MotorPin[i].enPin, OUTPUT);
-//     pinMode(MotorPin[i].directionPin, OUTPUT);
-//   }
-// }
-
-// /**  motorNumber: M1, M2
-// direction:          Forward, Backward **/
-// void setMotorDirection( int motorNumber, int direction ) {
-//   digitalWrite( MotorPin[motorNumber].directionPin, direction);
-// }
-
-// /** speed:  0-100   * */
-// inline void setMotorSpeed( int motorNumber, int speed ) {
-//   analogWrite(MotorPin[motorNumber].enPin, 255.0 * (speed / 100.0) ); //PWM
-// }
+  Serial.begin(9600);
+}
 
 
-// // #include <Stepper.h>
+void loop() {
+ // step one revolution  in one direction:
 
-// // const int STEPS = 200;
+  Serial.println("clockwise");
 
-// // // create an instance of the stepper class, specifying
+  stepper.step(STEPS);
 
-// // // the number of steps of the motor and the pins it's
-
-// // // attached to
-
-// // Stepper stepper(STEPS, 5, 4);
-
-// // void setup() {
-// //   // set the speed at 60 rpm:
-
-// //   stepper.setSpeed(60);
-
-// //   // initialize the serial port:
-
-// //   Serial.begin(9600);
-// // }
+  delay(500);
 
 
-// // void loop() {
-// //  // step one revolution  in one direction:
+  // step one revolution in the other direction:
 
-// //   Serial.println("clockwise");
+  // Serial.println("counterclockwise");
 
-// //   stepper.step(STEPS);
+  // stepper.step(-STEPS);
 
-// //   delay(500);
-
-
-// //   // step one revolution in the other direction:
-
-// //   // Serial.println("counterclockwise");
-
-// //   // stepper.step(-STEPS);
-
-// //   delay(500);
-// // }
+  delay(500);
+}
 
 
