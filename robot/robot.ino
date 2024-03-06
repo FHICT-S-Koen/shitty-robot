@@ -43,7 +43,7 @@ void setup()
 {
   Serial.begin(115200);
   // initialize the pushbutton pin as an input:
-  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(buttonPin, INPUT);
 
   pinMode(M1, OUTPUT);
   pinMode(M2, OUTPUT);
@@ -94,7 +94,6 @@ void loop()
         }
       }
       lastButtonState = reading;
-      return;
     }
   }
 	Serial.println(F("STARTED"));
@@ -102,23 +101,37 @@ void loop()
   // Het spel gaat starten!! 3,2,1 GO! 
   playTrack(2);
 
-  shoot(10000);
+  shoot(3000);
 
   bool stop = true;
   
   // Tijdens het spel 
   while(stop) {
-    // int currentState = digitalRead(buttonPin);
-    // if (currentState == HIGH) {
-    //   stop = true;
-    //   break;
-    // }
+    int reading = analogRead(buttonPin);
+
+    if (reading != lastButtonState) {
+      lastDebounceTime = millis();  // Reset debounce timer
+    }
+
+    if ((millis() - lastDebounceTime) > debounceDelay) {
+
+      if (reading != buttonState) {
+        buttonState = reading;
+
+        if (buttonState > 0) {
+          stop = false;
+        }
+      }
+    }
+    lastButtonState = reading;
+
+    // Music
+    playTrack(9);
+    delay(10000);
+    // MP3player.stopTrack();
     // Go Go Go! 
     // Sneller! 
     // Kan je ze allemaal vinden?
-    playTrack(9);
-    delay(10000);
-    MP3player.stopTrack();
     playTrack(random(3, 6));
     delay(1000);
   }
@@ -130,6 +143,8 @@ void loop()
 
   // Hebben jullie alles gevonden? 
   playTrack(7);
+  delay(3000);
+
   // Hervul me om een nieuw spel te starten. 
   playTrack(8);
 }
@@ -159,10 +174,4 @@ void playTrack(uint8_t track)
     Serial.println(track);
   }
 }
-
-
-// bool pollButton() {
-//   Serial.println(F("test"));
-  
-// }
 

@@ -7,7 +7,7 @@ unsigned long debounceDelay = 30;  // Debounce time in milliseconds
 void setup() {
   pinMode(buttonPin, INPUT);
   // digitalWrite(buttonPin, HIGH);  // Enable internal pull-up resistor
-  Serial.begin(9600); // Initialize serial communication
+  Serial.begin(115200); // Initialize serial communication
 }
 
 void loop() {
