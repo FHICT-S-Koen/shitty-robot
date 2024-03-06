@@ -61,7 +61,6 @@ void setup()
     Serial.println(F(" when trying to start MP3 player"));
     if( result == 6 ) {
       Serial.println(F("Warning: patch file not found, skipping.")); // can be removed for space, if needed.
-      Serial.println(F("Use the \"d\" command to verify SdCard can be read")); // can be removed for space, if needed.
     }
   }
 }
