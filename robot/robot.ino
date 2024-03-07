@@ -1,12 +1,7 @@
 #include <Stepper.h>
-
 #include <SPI.h>
-
-//Add the SdFat Libraries
 #include <SdFat.h>
 #include <SdFatUtil.h>
-
-//and the MP3 Shield Library
 #include <SFEMP3Shield.h>
 
 const int buttonPin = A2;
@@ -28,21 +23,22 @@ SdFat sd;
  * principal object for handling all the attributes, members and functions for the library.
  */
 SFEMP3Shield MP3player;
-
-const uint8_t volume = 0; // MP3 Player volume 0=max, 255=lowest (off)
+// MP3 Player volume 0=max, 255=lowest (off)
+const uint8_t volume = 0;
 
 /**
- * Arduino PWM DC motor speed control:
- * E1 = M1-
- * M1 = M1+
- * E2 = M2-
- * M2 = M2+
+ * Arduino PWM DC motors
  */
-int E1 = 5;
-int M1 = 4;
-int E2 = 6;
-int M2 = 7;
+const int E1 = 5; // M1- 
+const int M1 = 4; // M1+
+const int E2 = 6; // M2-
+const int M2 = 7; // M2+
+// DC motors PWM speed control
+const int SPEED = 255;
 
+/**
+ * Arduino stepper motor
+ */
 const int STEPS = 200;
 const int RPM = 60;
 Stepper stepper(STEPS, 4, 5, 6, 7);
@@ -51,28 +47,28 @@ void setup()
 {
   Serial.begin(115200);
   // initialize the pushbutton pin as an input:
-  pinMode(buttonPin, INPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
 
   pinMode(M1, OUTPUT);
   pinMode(M2, OUTPUT);
 
   stepper.setSpeed(RPM);
 
-  initSD();
-  initMP3Player();
+  // initSD();
+  // initMP3Player();
 }
 
 void loop()
 {
   bool started = false;
 
-  // Start game
+  Serial.println(F("START GAME?"));
   if (!started) {
     // Zijn jullie ready?
-    playTrack(1);
+    // playTrack(1);
 
     while(!started) {
-      int reading = analogRead(buttonPin);
+      int reading = digitalRead(buttonPin);
 
       if (reading != lastButtonState) {
         lastDebounceTime = millis();  // Reset debounce timer
@@ -82,7 +78,9 @@ void loop()
 
         if (reading != buttonState) {
           buttonState = reading;
-
+          Serial.println(buttonState);
+          Serial.println(reading);
+          
           if (buttonState > 0) {
             started = true;
             break;
@@ -90,7 +88,6 @@ void loop()
         }
       }
       lastButtonState = reading;
-      // return;
     }
   }
 	Serial.println(F("STARTED"));
@@ -154,8 +151,8 @@ void shoot(int ms)
   digitalWrite(M1, HIGH);
   digitalWrite(M2, HIGH);
   //PWM Speed Control
-  analogWrite(E1, 255);
-  analogWrite(E2, 255);
+  analogWrite(E1, SPEED);
+  analogWrite(E2, SPEED);
   delay(ms);
   digitalWrite(M1, LOW);
   digitalWrite(M2, LOW);
@@ -188,9 +185,9 @@ void initMP3Player() {
     Serial.print(F("Error code: "));
     Serial.print(result);
     Serial.println(F(" when trying to start MP3 player"));
-    if( result == 6 ) {
-      Serial.println(F("Warning: patch file not found, skipping.")); // can be removed for space, if needed.
-    }
+    // if( result == 6 ) {
+    //   Serial.println(F("Warning: patch file not found, skipping.")); // can be removed for space, if needed.
+    // }
   }
   MP3player.setVolume(volume, volume);
 }

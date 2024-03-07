@@ -5,13 +5,13 @@ unsigned long lastDebounceTime = 0;  // Time of the last button state change
 unsigned long debounceDelay = 30;  // Debounce time in milliseconds
 
 void setup() {
-  pinMode(buttonPin, INPUT);
-  // digitalWrite(buttonPin, HIGH);  // Enable internal pull-up resistor
+  pinMode(buttonPin, INPUT_PULLUP);
+  digitalWrite(buttonPin, HIGH);  // Enable internal pull-up resistor
   Serial.begin(115200); // Initialize serial communication
 }
 
 void loop() {
-  int reading = analogRead(buttonPin);
+  int reading = digitalRead(buttonPin);
 
   if (reading != lastButtonState) {
     lastDebounceTime = millis();  // Reset debounce timer
