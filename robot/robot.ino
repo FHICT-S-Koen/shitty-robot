@@ -135,7 +135,14 @@ void loop()
 
   // Hervul me om een nieuw spel te starten. 
   playTrack(8);
-  MP3player.stopTrack();
+
+  while(true) {
+    int reading = digitalRead(buttonPin);
+
+    if (reading > 0) {
+      break;
+    }
+  }
 }
 
 void shoot(int ms) 
