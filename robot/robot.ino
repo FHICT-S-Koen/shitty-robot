@@ -120,7 +120,7 @@ void loop()
     // Sneller! 
     // Kan je ze allemaal vinden?
     playTrack(random(3, 6));
-    delay(1000);
+    delay(1500);
   }
 
   // Eind spel
