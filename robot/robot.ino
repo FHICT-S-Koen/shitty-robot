@@ -60,6 +60,13 @@ void setup()
 
 void loop()
 {
+  while(true) {
+    int reading = digitalRead(buttonPin);
+
+    if (reading > 0) {
+      break;
+    }
+  }
   bool started = false;
 
   Serial.println(F("START GAME?"));
@@ -135,14 +142,6 @@ void loop()
 
   // Hervul me om een nieuw spel te starten. 
   playTrack(8);
-
-  while(true) {
-    int reading = digitalRead(buttonPin);
-
-    if (reading > 0) {
-      break;
-    }
-  }
 }
 
 void shoot(int ms) 
