@@ -82,7 +82,6 @@ void loop()
           buttonState = reading;
           
           if (buttonState > 0) {
-            // started = true;
             break;
           }
         }
@@ -136,6 +135,7 @@ void loop()
 
   // Hervul me om een nieuw spel te starten. 
   playTrack(8);
+  MP3player.stopTrack();
 }
 
 void shoot(int ms) 
