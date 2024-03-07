@@ -21,6 +21,6 @@ void setup() {
 void loop() {
   digitalWrite(M1, HIGH);
   digitalWrite(M2, HIGH);
-  analogWrite(E1, 80); // PWM Speed Control
+  analogWrite(E1, 255); // PWM Speed Control
   analogWrite(E2, 80); // PWM Speed Control
 }

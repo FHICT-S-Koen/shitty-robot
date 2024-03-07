@@ -1,3 +1,5 @@
+#include <Stepper.h>
+
 #include <SPI.h>
 
 //Add the SdFat Libraries
@@ -27,6 +29,8 @@ SdFat sd;
  */
 SFEMP3Shield MP3player;
 
+const uint8_t volume = 0; // MP3 Player volume 0=max, 255=lowest (off)
+
 /**
  * Arduino PWM DC motor speed control:
  * E1 = M1-
@@ -39,6 +43,10 @@ int M1 = 4;
 int E2 = 6;
 int M2 = 7;
 
+const int STEPS = 200;
+const int RPM = 60;
+Stepper stepper(STEPS, 4, 5, 6, 7);
+
 void setup()
 {
   Serial.begin(115200);
@@ -48,21 +56,10 @@ void setup()
   pinMode(M1, OUTPUT);
   pinMode(M2, OUTPUT);
 
-  //Initialize the SdCard.
-  if(!sd.begin(SD_SEL, SPI_FULL_SPEED)) sd.initErrorHalt();
-  // depending upon your SdCard environment, SPI_HAVE_SPEED may work better.
-  if(!sd.chdir("/")) sd.errorHalt("sd.chdir");
+  stepper.setSpeed(RPM);
 
-  uint8_t result = MP3player.begin();
-  MP3player.setVolume(0,0);
-  if(result != 0) {
-    Serial.print(F("Error code: "));
-    Serial.print(result);
-    Serial.println(F(" when trying to start MP3 player"));
-    if( result == 6 ) {
-      Serial.println(F("Warning: patch file not found, skipping.")); // can be removed for space, if needed.
-    }
-  }
+  initSD();
+  initMP3Player();
 }
 
 void loop()
@@ -93,6 +90,7 @@ void loop()
         }
       }
       lastButtonState = reading;
+      // return;
     }
   }
 	Serial.println(F("STARTED"));
@@ -100,7 +98,10 @@ void loop()
   // Het spel gaat starten!! 3,2,1 GO! 
   playTrack(2);
 
-  shoot(3000);
+  for (int i = 0; i <= 10; i++) {
+    shoot(3000);
+    stepper.step(STEPS);
+  }
 
   bool stop = true;
   
@@ -125,7 +126,7 @@ void loop()
     lastButtonState = reading;
 
     // Music
-    playTrack(9);
+    // playTrack(9);
     delay(10000);
     // MP3player.stopTrack();
     // Go Go Go! 
@@ -174,3 +175,22 @@ void playTrack(uint8_t track)
   }
 }
 
+void initSD() {
+  //Initialize the SdCard.
+  if(!sd.begin(SD_SEL, SPI_FULL_SPEED)) sd.initErrorHalt();
+  // depending upon your SdCard environment, SPI_HAVE_SPEED may work better.
+  if(!sd.chdir("/")) sd.errorHalt("sd.chdir");
+}
+
+void initMP3Player() {
+  uint8_t result = MP3player.begin();
+  if(result != 0) {
+    Serial.print(F("Error code: "));
+    Serial.print(result);
+    Serial.println(F(" when trying to start MP3 player"));
+    if( result == 6 ) {
+      Serial.println(F("Warning: patch file not found, skipping.")); // can be removed for space, if needed.
+    }
+  }
+  MP3player.setVolume(volume, volume);
+}

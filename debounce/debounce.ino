@@ -19,6 +19,8 @@ void loop() {
 
   if ((millis() - lastDebounceTime) > debounceDelay) {
 
+    // Serial.println(reading);
+    // Serial.println(buttonState);
     if (reading != buttonState) {
       buttonState = reading;
 
