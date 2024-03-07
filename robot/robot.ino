@@ -54,8 +54,8 @@ void setup()
 
   stepper.setSpeed(RPM);
 
-  // initSD();
-  // initMP3Player();
+  initSD();
+  initMP3Player();
 }
 
 void loop()
@@ -65,24 +65,24 @@ void loop()
   Serial.println(F("START GAME?"));
   if (!started) {
     // Zijn jullie ready?
-    // playTrack(1);
+    playTrack(1);
+    delay(2000);
 
     while(!started) {
       int reading = digitalRead(buttonPin);
 
       if (reading != lastButtonState) {
-        lastDebounceTime = millis();  // Reset debounce timer
+        // Reset debounce timer
+        lastDebounceTime = millis();
       }
 
       if ((millis() - lastDebounceTime) > debounceDelay) {
 
         if (reading != buttonState) {
           buttonState = reading;
-          Serial.println(buttonState);
-          Serial.println(reading);
           
           if (buttonState > 0) {
-            started = true;
+            // started = true;
             break;
           }
         }
@@ -94,38 +94,29 @@ void loop()
 
   // Het spel gaat starten!! 3,2,1 GO! 
   playTrack(2);
+  delay(5000);
 
+  Serial.println(F("SHOOTING"));
   for (int i = 0; i <= 10; i++) {
     shoot(3000);
     stepper.step(STEPS);
   }
 
-  bool stop = true;
-  
-  // Tijdens het spel 
-  while(stop) {
-    int reading = analogRead(buttonPin);
+  Serial.println(F("BALLS SHOT"));
+  Serial.println(F("START GATHERING"));
 
-    if (reading != lastButtonState) {
-      lastDebounceTime = millis();  // Reset debounce timer
+  // Tijdens het spel
+  while(true) {
+    int reading = digitalRead(buttonPin);
+
+    if (reading > 0) {
+      break;
     }
-
-    if ((millis() - lastDebounceTime) > debounceDelay) {
-
-      if (reading != buttonState) {
-        buttonState = reading;
-
-        if (buttonState > 0) {
-          stop = false;
-        }
-      }
-    }
-    lastButtonState = reading;
 
     // Music
-    // playTrack(9);
+    playTrack(9);
     delay(10000);
-    // MP3player.stopTrack();
+    MP3player.stopTrack();
     // Go Go Go! 
     // Sneller! 
     // Kan je ze allemaal vinden?
@@ -133,8 +124,9 @@ void loop()
     delay(1000);
   }
 
+  // Eind spel
+  Serial.println(F("GAME ENDED"));
   delay(1000);
-  // Eind spel 
 
   // SCRAP - Alle balletjes zijn geschoten! 
 
@@ -150,7 +142,7 @@ void shoot(int ms)
 {
   digitalWrite(M1, HIGH);
   digitalWrite(M2, HIGH);
-  //PWM Speed Control
+  // PWM Speed Control
   analogWrite(E1, SPEED);
   analogWrite(E2, SPEED);
   delay(ms);
@@ -167,7 +159,7 @@ void playTrack(uint8_t track)
     Serial.print(result);
     Serial.println(F(" when trying to play track"));
   } else {
-    Serial.print(F("Playing: "));
+    Serial.print(F("Playing track: "));
     Serial.println(track);
   }
 }
