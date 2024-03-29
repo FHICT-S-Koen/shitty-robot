@@ -12,6 +12,6 @@ void setup() {
 }
 
 void loop() {
-	dc_motor_1.run(FORWARD);
-	dc_motor_2.run(FORWARD);
+	// dc_motor_1.run(BACKWARD);
+	// dc_motor_2.run(BACKWARD);
 }

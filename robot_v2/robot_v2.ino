@@ -10,8 +10,8 @@ unsigned long debounceDelay = 30;  // Debounce time in milliseconds
 
 Servo servo;
 
-AF_DCMotor dc_motor_1(3);
-AF_DCMotor dc_motor_2(4);
+AF_DCMotor dc_motor_1(1);
+AF_DCMotor dc_motor_2(2);
 // DC motors PWM speed control
 const int SPEED = 200;
 
@@ -40,8 +40,8 @@ void setup() {
   dc_motor_2.setSpeed(SPEED);
 	dc_motor_2.run(RELEASE);
 
-	initSD();
-  initMP3Player();
+	// initSD();
+  // initMP3Player();
 }
 
 void loop()
@@ -49,18 +49,28 @@ void loop()
 	// Zijn jullie ready?
 	// playTrack(1);
 
-	delay(2000);
+	// delay(2000);
 
 	dc_motor_1.run(FORWARD);
 	dc_motor_2.run(FORWARD);
 
-	// while (true)
-	// {
-	// 	servo.write(90);
-	// 	delay(2000);
-	// 	servo.write(-90);
-	// 	delay(2000);
-	// }
+	while (true)
+	{
+	  dc_motor_1.setSpeed(0);
+	  dc_motor_2.setSpeed(0);
+		servo.write(90);
+		delay(500);
+    dc_motor_1.setSpeed(SPEED);
+	  dc_motor_2.setSpeed(SPEED);
+		delay(4000);
+	  dc_motor_1.setSpeed(0);
+	  dc_motor_2.setSpeed(0);
+		servo.write(-90);
+		delay(500);
+    dc_motor_1.setSpeed(SPEED);
+	  dc_motor_2.setSpeed(SPEED);
+		delay(4000);
+	}
 }
 
 void initSD() {
