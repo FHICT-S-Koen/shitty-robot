@@ -35,10 +35,7 @@ void setup() {
 	servo.attach(10);
 
 	dc_motor_1.setSpeed(SPEED);
-	dc_motor_1.run(RELEASE);
-
   dc_motor_2.setSpeed(SPEED);
-	dc_motor_2.run(RELEASE);
 
 	// initSD();
   // initMP3Player();
@@ -46,31 +43,59 @@ void setup() {
 
 void loop()
 {
-	// Zijn jullie ready?
-	// playTrack(1);
+  dc_motor_1.run(RELEASE);
+  dc_motor_2.run(RELEASE);
 
-	// delay(2000);
+  bool started = false;
+
+  Serial.println("START GAME?");
+  while(true) {
+    int reading = digitalRead(buttonPin);
+    if (reading == 0) {
+      break;
+    }
+  }
+	Serial.println("STARTED");
 
 	dc_motor_1.run(FORWARD);
 	dc_motor_2.run(FORWARD);
 
 	while (true)
 	{
+    int reading = digitalRead(buttonPin);
+    if (reading == 0) {
+      break;
+    }
 	  dc_motor_1.setSpeed(0);
 	  dc_motor_2.setSpeed(0);
 		servo.write(90);
 		delay(500);
+   int reading = digitalRead(buttonPin);
+    if (reading == 0) {
+      break;
+    }
     dc_motor_1.setSpeed(SPEED);
 	  dc_motor_2.setSpeed(SPEED);
 		delay(4000);
+   int reading = digitalRead(buttonPin);
+    if (reading == 0) {
+      break;
+    }
 	  dc_motor_1.setSpeed(0);
 	  dc_motor_2.setSpeed(0);
 		servo.write(-90);
 		delay(500);
+   int reading = digitalRead(buttonPin);
+    if (reading == 0) {
+      break;
+    }
     dc_motor_1.setSpeed(SPEED);
 	  dc_motor_2.setSpeed(SPEED);
 		delay(4000);
 	}
+  dc_motor_1.run(RELEASE);
+  dc_motor_2.run(RELEASE);
+  delay(10000);
 }
 
 void initSD() {

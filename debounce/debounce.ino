@@ -1,4 +1,4 @@
-const int buttonPin = 2;  // Analog pin the button is connected to
+const int buttonPin = A2;  // Analog pin the button is connected to
 int buttonState;            // the current reading from the input pin
 int lastButtonState = LOW;  // Previous state of the button
 unsigned long lastDebounceTime = 0;  // Time of the last button state change

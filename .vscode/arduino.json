@@ -2,5 +2,5 @@
   "board": "arduino:avr:uno",
   "programmer": "avrispmkii",
   "port": "/dev/ttyACM0",
-  "sketch": "debounce/debounce.ino"
+  "sketch": "robot_v2/robot_v2.ino"
 }
