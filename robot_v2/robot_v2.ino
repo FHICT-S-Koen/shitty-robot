@@ -9,12 +9,11 @@ Servo servo;
 AF_DCMotor dc_motor_1(1);
 AF_DCMotor dc_motor_2(2);
 // DC motors PWM speed control
-const int SPEED = 200;
+const int SPEED = 100;
 
 void setup() {
-  // Serial.begin(115200);
+  Serial.begin(115200);
 
-  // initialize the pushbutton pin as an input:
   pinMode(buttonPin, INPUT_PULLUP);
 
 	servo.attach(10);
@@ -33,8 +32,8 @@ void loop()
   Serial.println("START GAME?");
   while(true) {
     int reading = analogRead(buttonPin);
-    // Serial.println(reading);
-    if (reading == 0) {
+    Serial.println(reading);
+    if (reading < 20) {
       break;
     }
   }
